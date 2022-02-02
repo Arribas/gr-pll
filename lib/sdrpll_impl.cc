@@ -117,16 +117,6 @@ sdrpll_impl::sdrpll_impl(float bw_hz, int detector_type, int filt_order, float p
  */
 sdrpll_impl::~sdrpll_impl() {}
 
-
-float sdrpll_impl::mod_2pi(float in)
-{
-    if (in > GR_M_PI)
-        return in - GR_M_TWOPI;
-    else if (in < -GR_M_PI)
-        return in + GR_M_TWOPI;
-    else
-        return in;
-}
 void sdrpll_impl::phase_wrap()
 {
     while (d_phase_rad > GR_M_TWOPI)
@@ -136,7 +126,7 @@ void sdrpll_impl::phase_wrap()
 }
 
 
-float sdrpll_impl::phase_detector_rads(gr_complex sample, float ref_phase_rads, int type)
+float sdrpll_impl::phase_detector_rads(gr_complex sample, int type)
 {
     float sample_phase_rads;
     switch (type)
@@ -148,9 +138,9 @@ float sdrpll_impl::phase_detector_rads(gr_complex sample, float ref_phase_rads, 
             sample_phase_rads = std::atan(sample.imag() / sample.real());
             break;
         default:
-            gr::fast_atan2f(sample.imag(), sample.real());
+            sample_phase_rads = gr::fast_atan2f(sample.imag(), sample.real());
         }
-    return mod_2pi(sample_phase_rads - ref_phase_rads);
+    return sample_phase_rads;
 }
 
 
@@ -179,10 +169,10 @@ float sdrpll_impl::get_carrier_error_cycles(float PLL_discriminator_cycles)
             d_pll_w = pll_w_new;
             break;
         case 1:  //1sr order PLL (no filter)
-            carrier_error_hz = PLL_discriminator_cycles * d_period_s;
+            carrier_error_hz = PLL_discriminator_cycles;
             break;
         default:
-            carrier_error_hz = PLL_discriminator_cycles * d_period_s;
+            carrier_error_hz = PLL_discriminator_cycles;
         }
 
     return carrier_error_hz;
@@ -198,25 +188,31 @@ int sdrpll_impl::work(int noutput_items, gr_vector_const_void_star &input_items,
     float pll_discriminator_rads;
     float pll_filter_out_hz;
     float t_imag, t_real;
+    gr_complex mix_out;
     int size = noutput_items;
 
     while (size-- > 0)
         {
+            //NCO
             gr::sincosf(d_phase_rad, &t_imag, &t_real);
-            *optr++ = gr_complex(t_real, t_imag);
+            *optr = gr_complex(t_real, t_imag);
+            //MIXER
+            mix_out = *iptr * gr_complex(t_real, -t_imag);
 
-            pll_discriminator_rads = d_k_d * phase_detector_rads(*iptr++, d_phase_rad, d_detector_type);
+            //PHASE DETECTOR
+            pll_discriminator_rads = d_k_d * phase_detector_rads(mix_out, d_detector_type);
 
+            //LOOP FILTER
             pll_filter_out_hz = get_carrier_error_cycles(pll_discriminator_rads / GR_M_TWOPI);  //estimates error in Hz
 
-            //d_phase_rad += pll_filter_out;
+            //NCO UPDATE
             d_phase_rad += d_hz_to_nco_phase_step_rads_per_sample * (d_nco_base_freq_hz + d_k_o * pll_filter_out_hz);
             phase_wrap();
+
+            //NEXT SAMPLE
+            iptr++;
+            optr++;
         }
-    return noutput_items;
-
-
-    // Tell runtime system how many output items we produced.
     return noutput_items;
 }
 

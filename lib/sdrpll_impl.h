@@ -51,9 +51,8 @@ private:
     int d_detector_type;
 
     float d_phase_rad;
-    float mod_2pi(float in);
     void phase_wrap();
-    float phase_detector_rads(gr_complex sample, float ref_phase_rads, int type);
+    float phase_detector_rads(gr_complex sample, int type);
     float get_carrier_error_cycles(float PLL_discriminator_cycles);
 
 public:
