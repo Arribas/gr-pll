@@ -44,11 +44,15 @@ sdrpll::sptr sdrpll::make(float bw_hz, int detector_type, int filt_order, float 
 /*
  * The private constructor
  */
+
+static int ios[] = {sizeof(gr_complex), sizeof(float)};
+static std::vector<int> iosig(ios, ios + sizeof(ios) / sizeof(int));
+
 sdrpll_impl::sdrpll_impl(float bw_hz, int detector_type, int filt_order, float period,
     float nco_base_freq, float k_d, float k_o, bool custom_params, float w0, float a2, float a3,
     float b3)
     : gr::sync_block("sdrpll", gr::io_signature::make(1, 1, sizeof(gr_complex)),
-          gr::io_signature::make(1, 1, sizeof(gr_complex)))
+          gr::io_signature::makev(1, 2, iosig))
 {
     /*
      * Filter design (Kaplan 2nd ed., Pag. 181 Fig. 181)
@@ -183,7 +187,7 @@ int sdrpll_impl::work(int noutput_items, gr_vector_const_void_star &input_items,
 {
     const gr_complex *iptr = (const gr_complex *)input_items[0];
     gr_complex *optr = (gr_complex *)output_items[0];
-
+    float *freq_optr = output_items.size() >= 2 ? (float *)output_items[1] : NULL;
 
     float pll_discriminator_rads;
     float pll_filter_out_hz;
@@ -204,7 +208,11 @@ int sdrpll_impl::work(int noutput_items, gr_vector_const_void_star &input_items,
 
             //LOOP FILTER
             pll_filter_out_hz = get_carrier_error_cycles(pll_discriminator_rads / GR_M_TWOPI);  //estimates error in Hz
-
+            if (freq_optr != NULL)
+                {
+                    *freq_optr = pll_filter_out_hz;
+                    freq_optr++;
+                }
             //NCO UPDATE
             d_phase_rad += d_hz_to_nco_phase_step_rads_per_sample * (d_nco_base_freq_hz + d_k_o * pll_filter_out_hz);
             phase_wrap();

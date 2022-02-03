@@ -1,16 +1,16 @@
 options:
   parameters:
-    author: javier
+    author: Javier Arribas
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
-    copyright: ''
+    copyright: GPL v3 Public License
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: test_pll
+    id: AA
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -21,7 +21,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Not titled yet
+    title: Test PLL pull-in transotory
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -32,11 +32,47 @@ options:
     state: enabled
 
 blocks:
+- name: carrier_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: '1400'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 28.0]
+    rotation: 0
+    state: true
+- name: pll_nco_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: '1400'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 28.0]
+    rotation: 0
+    state: true
+- name: pll_nco_freq_error
+  id: variable
+  parameters:
+    comment: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 28.0]
+    rotation: 0
+    state: true
 - name: samp_rate
   id: variable
   parameters:
     comment: ''
-    value: '100000'
+    value: '32000'
   states:
     bus_sink: false
     bus_source: false
@@ -44,12 +80,29 @@ blocks:
     coordinate: [184, 12]
     rotation: 0
     state: enabled
+- name: analog_const_source_x_0
+  id: analog_const_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 540.0]
+    rotation: 0
+    state: true
 - name: analog_noise_source_x_0
   id: analog_noise_source_x
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.75'
+    amp: '1'
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -60,21 +113,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [56, 324.0]
+    coordinate: [64, 300.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
     affinity: ''
     alias: ''
-    amp: '1'
+    amp: '2'
     comment: ''
     freq: '1400'
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
-    phase: pi/2
+    phase: '0'
     samp_rate: samp_rate
     type: complex
     waveform: analog.GR_COS_WAVE
@@ -82,7 +135,29 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 152.0]
+    coordinate: [40, 156.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_SQR_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 388.0]
     rotation: 0
     state: true
 - name: blocks_add_xx_0
@@ -100,9 +175,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 280.0]
+    coordinate: [384, 216.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: blocks_complex_to_arg_0
   id: blocks_complex_to_arg
   parameters:
@@ -116,7 +191,39 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [928, 144.0]
+    coordinate: [1280, 600.0]
+    rotation: 0
+    state: true
+- name: blocks_complex_to_arg_0_0
+  id: blocks_complex_to_arg
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1120, 784.0]
+    rotation: 0
+    state: true
+- name: blocks_float_to_complex_0
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 448.0]
     rotation: 0
     state: true
 - name: blocks_multiply_conjugate_cc_0
@@ -132,10 +239,44 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [728, 128.0]
+    coordinate: [1096, 536.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_conjugate_cc_0_0
+  id: blocks_multiply_conjugate_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1120, 856.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: cmath.exp(1j*pi*90/180)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 292.0]
+    rotation: 0
+    state: disabled
+- name: blocks_multiply_const_vxx_0_0
   id: blocks_multiply_const_vxx
   parameters:
     affinity: ''
@@ -150,7 +291,43 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 44.0]
+    coordinate: [1320, 404.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_0_0_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: 180.0/pi
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1352, 700.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 104.0]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -169,9 +346,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [416, 260.0]
+    coordinate: [568, 204.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: import_0
   id: import
   parameters:
@@ -182,7 +359,20 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 68.0]
+    coordinate: [392, 28.0]
+    rotation: 0
+    state: true
+- name: import_0_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import cmath
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 28.0]
     rotation: 0
     state: true
 - name: pll_sdrpll_0
@@ -193,7 +383,7 @@ blocks:
     affinity: ''
     alias: ''
     b3: '0'
-    bw_hz: '25'
+    bw_hz: '10'
     comment: ''
     custom_params: 'False'
     detector_type: '1'
@@ -202,102 +392,49 @@ blocks:
     k_o: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    nco_base_freq_hz: '1200'
+    nco_base_freq_hz: pll_nco_freq-pll_nco_freq_error
     period: 1/samp_rate
     w0: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 428.0]
+    coordinate: [704, 500.0]
     rotation: 0
     state: enabled
-- name: qtgui_freq_sink_x_0
-  id: qtgui_freq_sink_x
+- name: pll_sdrpll_0_0
+  id: pll_sdrpll
   parameters:
+    a2: '0'
+    a3: '0'
     affinity: ''
     alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    average: '1.0'
-    axislabels: 'True'
-    bw: samp_rate
-    color1: '"blue"'
-    color10: '"dark blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    b3: '0'
+    bw_hz: '100'
     comment: ''
-    ctrlpanel: 'True'
-    fc: '0'
-    fftsize: '1024'
-    freqhalf: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label: Relative Gain
-    label1: RX signal
-    label10: ''''''
-    label2: PLL recovered carrier
-    label3: ''''''
-    label4: ''''''
-    label5: ''''''
-    label6: ''''''
-    label7: ''''''
-    label8: ''''''
-    label9: ''''''
-    legend: 'True'
+    custom_params: 'False'
+    detector_type: '1'
+    filt_order: '2'
+    k_d: '1'
+    k_o: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    name: '""'
-    nconnections: '2'
-    showports: 'False'
-    tr_chan: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_tag: '""'
-    type: complex
-    units: dB
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
-    ymax: '10'
-    ymin: '-140'
+    nco_base_freq_hz: pll_nco_freq-pll_nco_freq_error
+    period: 1/samp_rate
+    w0: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1128, 348.0]
+    coordinate: [704, 724.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
     affinity: ''
     alias: ''
-    alpha1: '1.0'
+    alpha1: '0.5'
     alpha10: '1.0'
     alpha2: '1.0'
     alpha3: '1.0'
@@ -324,11 +461,11 @@ blocks:
     entags: 'True'
     grid: 'False'
     gui_hint: ''
-    label1: Signal 1
+    label1: Synchro
     label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
+    label2: RX signal
+    label3: 'PLL #1 output'
+    label4: 'PLL #2 output'
     label5: Signal 5
     label6: Signal 6
     label7: Signal 7
@@ -345,9 +482,9 @@ blocks:
     marker7: '-1'
     marker8: '-1'
     marker9: '-1'
-    name: '"Input vs. PLL output"'
-    nconnections: '2'
-    size: '1024'
+    name: RX signal vs. PLL output
+    nconnections: '4'
+    size: 1024*4
     srate: samp_rate
     stemplot: 'False'
     style1: '1'
@@ -360,14 +497,14 @@ blocks:
     style7: '1'
     style8: '1'
     style9: '1'
-    tr_chan: '1'
+    tr_chan: '0'
     tr_delay: '0.01'
     tr_level: '0.0'
     tr_mode: qtgui.TRIG_MODE_AUTO
     tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
     type: complex
-    update_time: '1'
+    update_time: '0.10'
     width1: '1'
     width10: '1'
     width2: '1'
@@ -386,112 +523,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1128, 244.0]
+    coordinate: [1120, 152.0]
     rotation: 0
-    state: enabled
-- name: qtgui_time_sink_x_0_0
-  id: qtgui_time_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'True'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
-    comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: PLL Freq. out
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: PLL Loop Filter frequency out
-    nconnections: '1'
-    size: '1024'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: float
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Frequency
-    ymax: '1'
-    ymin: '-1'
-    yunit: '[Hz]'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1112, 460.0]
-    rotation: 0
-    state: enabled
+    state: true
 - name: qtgui_time_sink_x_1
   id: qtgui_time_sink_x
   parameters:
     affinity: ''
     alias: ''
-    alpha1: '1.0'
+    alpha1: '0.5'
     alpha10: '1.0'
     alpha2: '1.0'
     alpha3: '1.0'
@@ -518,10 +558,10 @@ blocks:
     entags: 'True'
     grid: 'False'
     gui_hint: ''
-    label1: Signal 1
+    label1: Synchro
     label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
+    label2: 'PLL #1 output'
+    label3: 'PLL #2 output '
     label4: Signal 4
     label5: Signal 5
     label6: Signal 6
@@ -539,9 +579,9 @@ blocks:
     marker7: '-1'
     marker8: '-1'
     marker9: '-1'
-    name: Phase Error [deg]
-    nconnections: '1'
-    size: '1024'
+    name: '"Phase Error [deg]"'
+    nconnections: '3'
+    size: 1024*4
     srate: samp_rate
     stemplot: 'False'
     style1: '1'
@@ -555,9 +595,9 @@ blocks:
     style8: '1'
     style9: '1'
     tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_delay: '0.0'
+    tr_level: '0.5'
+    tr_mode: qtgui.TRIG_MODE_NORM
     tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
     type: float
@@ -572,33 +612,47 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    ylabel: Phase Error
+    ylabel: '[deg]'
     ymax: '180'
     ymin: '-180'
-    yunit: '[deg]'
+    yunit: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1128, 116.0]
+    coordinate: [1512, 484.0]
     rotation: 0
     state: true
 
 connections:
+- [analog_const_source_x_0, '0', blocks_float_to_complex_0, '1']
 - [analog_noise_source_x_0, '0', blocks_add_xx_0, '1']
-- [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_sig_source_x_0, '0', blocks_multiply_conjugate_cc_0, '0']
+- [analog_sig_source_x_0, '0', blocks_multiply_conjugate_cc_0_0, '0']
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '0']
+- [analog_sig_source_x_0_0, '0', blocks_float_to_complex_0, '0']
+- [analog_sig_source_x_0_0, '0', qtgui_time_sink_x_1, '0']
 - [blocks_add_xx_0, '0', blocks_throttle_0, '0']
-- [blocks_complex_to_arg_0, '0', blocks_multiply_const_vxx_0, '0']
+- [blocks_complex_to_arg_0, '0', blocks_multiply_const_vxx_0_0, '0']
+- [blocks_complex_to_arg_0_0, '0', blocks_multiply_const_vxx_0_0_0, '0']
+- [blocks_float_to_complex_0, '0', blocks_multiply_xx_0, '1']
+- [blocks_float_to_complex_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_multiply_conjugate_cc_0, '0', blocks_complex_to_arg_0, '0']
-- [blocks_multiply_const_vxx_0, '0', qtgui_time_sink_x_1, '0']
+- [blocks_multiply_conjugate_cc_0_0, '0', blocks_complex_to_arg_0_0, '0']
+- [blocks_multiply_const_vxx_0, '0', pll_sdrpll_0, '0']
+- [blocks_multiply_const_vxx_0, '0', pll_sdrpll_0_0, '0']
+- [blocks_multiply_const_vxx_0, '0', qtgui_time_sink_x_0, '2']
+- [blocks_multiply_const_vxx_0_0, '0', qtgui_time_sink_x_1, '1']
+- [blocks_multiply_const_vxx_0_0_0, '0', qtgui_time_sink_x_1, '2']
+- [blocks_multiply_xx_0, '0', blocks_add_xx_0, '0']
+- [blocks_throttle_0, '0', blocks_multiply_const_vxx_0, '0']
 - [blocks_throttle_0, '0', pll_sdrpll_0, '0']
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_throttle_0, '0', pll_sdrpll_0_0, '0']
+- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '1']
 - [pll_sdrpll_0, '0', blocks_multiply_conjugate_cc_0, '1']
-- [pll_sdrpll_0, '0', qtgui_freq_sink_x_0, '1']
-- [pll_sdrpll_0, '0', qtgui_time_sink_x_0, '1']
-- [pll_sdrpll_0, '1', qtgui_time_sink_x_0_0, '0']
+- [pll_sdrpll_0, '0', qtgui_time_sink_x_0, '2']
+- [pll_sdrpll_0_0, '0', blocks_multiply_conjugate_cc_0_0, '1']
+- [pll_sdrpll_0_0, '0', qtgui_time_sink_x_0, '3']
 
 metadata:
   file_format: 1

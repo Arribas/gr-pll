@@ -15,6 +15,7 @@ parameters:
 - id: bw_hz
   label: PLL loop filter bandwidth [Hz]
   dtype: float
+  default: 50
   
 - id: detector_type
   label: Phase Detector type
@@ -34,7 +35,7 @@ parameters:
 - id: period
   label: PLL loop period [s]
   dtype: float
-  default: '1/samp_freq'
+  default: '1/samp_rate'
   
 - id: nco_base_freq_hz
   label: NCO free runing frequency [Hz]
@@ -60,16 +61,22 @@ parameters:
 - id: w0
   label: Natural frequency [Hz]
   dtype: float
+  default: 1.0
   
 - id: a2
   label: PLL filter a_2 coeficient
   dtype: float
+  default: 0.0
+    
 - id: a3
   label: PLL filter a_3 coeficient
   dtype: float
+  default: 0.0
+  
 - id: b3
   label: PLL filter b_3 coeficient
   dtype: float
+  default: 0.0
   
   
 
@@ -87,6 +94,11 @@ inputs:
 outputs:
 - label: NCO OUT
   dtype: complex
+  
+- label: FREQ OUT
+  dtype: float
+  optional: true
+  
 
 #  'file_format' specifies the version of the GRC yml format used in the file
 #  and should usually not be changed.
